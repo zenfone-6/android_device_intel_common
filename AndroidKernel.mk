@@ -68,10 +68,10 @@ KERNEL_BLD_FLAGS := \
     $(KERNEL_EXTRA_FLAGS)
 
 KERNEL_BLD_FLAGS_KDUMP := $(KERNEL_BLD_FLAGS) \
-    O=../../$(KERNEL_OUT_DIR_KDUMP) \
+    O=../../../$(KERNEL_OUT_DIR_KDUMP) \
 
 KERNEL_BLD_FLAGS :=$(KERNEL_BLD_FLAGS) \
-     O=../../$(KERNEL_OUT_DIR) \
+     O=../../../$(KERNEL_OUT_DIR) \
 
 KERNEL_BLD_ENV := CROSS_COMPILE=$(KERNEL_CROSS_COMP) \
     PATH=$(KERNEL_PATH):$(PATH) \
@@ -168,18 +168,18 @@ define build_kernel_module
 
 $(2): $(KERNEL_BZIMAGE)
 	@echo Building kernel module $(2) in $(1)
-	@mkdir -p $(KERNEL_OUT_DIR)/../../$(1)
-	@+$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../$(1) $(3)
+	@mkdir -p $(KERNEL_OUT_DIR)/../../../$(1)
+	@+$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../../$(1) $(3)
 
 $(2)_install: $(2)
-	@+$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../$(1) $(3) modules_install
+	@+$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../../$(1) $(3) modules_install
 
 $(2)_clean:
 	@echo Cleaning kernel module $(2) in $(1)
-	@$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../$(1) clean
+	@$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../../$(1) clean
 
 $(addprefix $(2)_,TAGS tags gtags cscope): $(KERNEL_CONFIG)
-	@$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../$(1) $$(subst $(2)_,,$$@)
+	@$(KERNEL_BLD_ENV) $(MAKE) -C $(KERNEL_SRC_DIR) $(KERNEL_BLD_FLAGS) M=../../../$(1) $$(subst $(2)_,,$$@)
 	@rm -f $(1)/$$($$(subst $(2)_,,$$@)_files)
 	@cp -fs $$(addprefix `pwd`/$(KERNEL_OUT_DIR)/,$$($$(subst $(2)_,,$$@)_files)) $(1)/
 
@@ -192,4 +192,3 @@ endef
 
 .PHONY: menuconfig xconfig gconfig get_kernel_from_source
 .PHONY: copy_modules_to_root $(KERNEL_BZIMAGE)
-
